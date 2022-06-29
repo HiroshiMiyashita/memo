@@ -39,12 +39,11 @@
     gs://<BUCKET_NAME>
     ```
 
-4. バックアップ用のバケットのライフサイクルルールを変更.
+4. バックアップ用のバケットの保持ポリシーの設定
 
-    バケットの設定で、オブジェクトのバージョニングの個数や、古いバージョンのものをどれだけの期間保持するかなどのライフサイクルルールを設定する.\
-    設定値は、バックアップ要件に依存.
+    バケットの設定で、オブジェクトの保持ポリシーをバックアップポリシーに従って設定する.
 
-    > [データライフサイクルを管理するオプション](https://cloud.google.com/storage/docs/control-data-lifecycles?hl=ja)
+    > [保持ポリシー](https://cloud.google.com/storage/docs/bucket-lock)
 
 
 ## Cloud Functionsを作成
