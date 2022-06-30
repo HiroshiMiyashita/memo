@@ -1,8 +1,21 @@
-# firebaseでマルチホストを実現する方法
+# flutterでfirebaseでマルチサイトを実現する方法
 
-firebase-toolsがインストールされていること
+ここでは、flutterでのマルチサイトへの対応方法について説明する.\
+ここで説明する方法以外にもマルチサイトを実現する方法はあるので、マルチサイトを実現するための1つの方法としてこんなのがあるよぐらいの気持ちで読んでください.
 
-1. firebaseでマルチサイトを作成する
+## 前提条件
+
+1. firebase-toolsがインストールされていること.
+
+2. firebaseプロジェクトに既に複数サイトを設定していること.
+
+3. firebaseプロジェクトにログインしていること.
+
+    > `firebase login`とか`firebase login:ci`コマンドでログイン.
+
+## 方法
+
+1. firebaseでマルチサイトを作成する.
 
     サイトIDは以下の2つとする
 
@@ -11,8 +24,12 @@ firebase-toolsがインストールされていること
 
     > `firebase hosting:sites:list`
     > コマンドで確認可能
+    >
+    > firebaseコマンドからもサイトを作成することができる.\
+    > 詳しくはfirebaseコマンドのヘルプを確認.\
+    > `firebase --help`
 
-2. hoge-site-01用のアプリケーションをビルド
+2. hoge-site-01用のアプリケーションをビルド.
 
     1. ビルド時の出力先を変更する
 
@@ -26,7 +43,7 @@ firebase-toolsがインストールされていること
 
         > `hoge-site-01`にデプロイするアプリのエントリーポイントが`lib/main_01.dart`であることを前提とした場合
 
-3. hoge-site-02用のアプリケーションをビルド
+3. hoge-site-02用のアプリケーションをビルド.
 
     1. ビルド時の出力先を変更する
 
@@ -38,7 +55,7 @@ firebase-toolsがインストールされていること
 
         > `hoge-site-02`にデプロイするアプリのエントリーポイントが`lib/main_02.dart`であることを前提とした場合
 
-4. ターゲット名とサイトIDを紐づける
+4. ターゲット名とサイトIDを紐づける.
 
     以下のコマンドを実行してターゲット名とサイトIDを紐づける
 
@@ -48,17 +65,16 @@ firebase-toolsがインストールされていること
     > このコマンドにより、ターゲットとそれに対するサイトの紐づけの情報が`.firebaserc`に記述される
     > コマンドでなくてもこのファイルをいじるだけでよい？
 
-5. firebase.jsonの`hosting`に上記で設定したターゲットそれぞれに対する設定を記述する
+5. firebase.jsonの`hosting`に上記で設定したターゲットそれぞれに対する設定を記述する.
 
     以下のサイトなどを参考にする
 
     [複数のサイトでプロジェクトのリソースを共有する](https://firebase.google.com/docs/hosting/multisites?hl=ja)
 
-6. firebaseにデプロイする
+6. firebaseにデプロイする.
 
     `firebase deploy`
 
     > hostingのみをdeployしたい場合には以下のコマンドを使用する
     >
     > `firebase deploy --only hosting`
-    

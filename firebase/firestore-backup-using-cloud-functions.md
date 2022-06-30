@@ -13,8 +13,12 @@
 
     とする.
 
-    > `<BUCKET_NAME>`の部分を実際のバケット名にすること.
-
+    > `<BUCKET_NAME>`の部分を実際のバケット名にすること.\
+    >
+    > ----
+    >
+    > バケットごとに保持ポリシーが設定できるので、日時、週次と異なるタイミングでバックアップを取得する場合には、日時、週次毎のバックアップ先のバケットを用意する方がいいと思う.
+  
 2. Cloud Functionsを実行するアカウントにfirestoreに対するImport Exportを行うための権限を付与.
 
     > Cloud Functionsを実行するアカウントは`<PROJECT_ID>@appspot.gserviceaccount.com`というアカウントらしい.\
@@ -44,7 +48,6 @@
     バケットの設定で、オブジェクトの保持ポリシーをバックアップポリシーに従って設定する.
 
     > [保持ポリシー](https://cloud.google.com/storage/docs/bucket-lock)
-
 
 ## Cloud Functionsを作成
 
@@ -82,8 +85,16 @@
 
     > 以下を参考にした.\
     > [Schedule data exports](https://firebase.google.com/docs/firestore/solutions/schedule-export)
-
+    >
+    > ----
+    >
     > 上記の`schedule()`の引数で指定している構文は、cronジョブスケジュールの構文とApp Engine Shedule構文が使えるらしい.\
     >
     > [cron ジョブ スケジュールの構成](https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules?hl=ja)\
     > [App Engine Schedule構文](https://cloud.google.com/appengine/docs/standard/python/config/cronref?hl=ja#schedule_format)
+    >
+    > ----
+    >
+    > 上記のプログラムの`exportDocuments()`関数の`outputUriPrefix`では、`"gs://<BUCKET_NAME>/daily`のようにフォルダ(正確にはPrefix)を指定することもできるが、そうすると、そのフォルダに上書きしようとするためCloud Functionsで`Already exists`というエラーメッセージと共にバックアップが失敗する.\
+    > `"gs://<BUCKET_NAME>"`と指定するとそのバケット配下に実行時の時刻を基に作成したフォルダを作成してバックアップを格納してくれるので、既にバックアップが存在しているのでバックアップが失敗するということはない.\
+    > [Method: projects.databases.exportDocuments](https://cloud.google.com/firestore/docs/reference/rest/v1/projects.databases/exportDocuments)
