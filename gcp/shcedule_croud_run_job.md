@@ -19,8 +19,7 @@
 2. Pub/Subのサブスクリプションで指定するサービスアカウントに対してCloud Run Jobを開始できるよう roles/run.invoker ロールを付与する.
 
    ```sh
-   gcloud run services add-iam-policy-binding ${PROJECT_NAME} \
-   --member="serviceAccount:${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}"
+   gcloud projects add-iam-policy-binding ${PROJECT_NAME} \
+   --member="serviceAccount:${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}" \
    --role=roles/run.invoker
    ```
-
