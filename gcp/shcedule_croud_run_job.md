@@ -6,6 +6,8 @@
 2. Pub/Subの定期実行用のTopicのサブスクリプションで、Cloud Run Jobを実行するためのAPI(Httpでアクセスできるエンドポイント)を実行
 3. 2.のAPIを受けてCloud Run Jobのジョブが輝度する
 
+    ジョブの実行アカウントは、Pub/Subのサブスクリプションで指定したサービスアカウント？
+
 ## 準備
 
 1. Pub/Subのサブスクリプションで指定するサービスアカウントのトークンを取得するために使われるGoogleが管理するサービスアカウントに対して isam.serviceAccountTokenCreator ロールを付与する.
