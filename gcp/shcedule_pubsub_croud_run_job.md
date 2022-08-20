@@ -1,12 +1,12 @@
 # Cloud ShedulerとPub/SubとCloud Run Jobを連携させて定期的にジョブを実行させる方法
 
+この方法はうまくいっていない。
+
 ## 概要
 
 1. Cloud Schedulerで定期的にPub/Subの定期実行用Topicにメッセージを送信
 2. Pub/Subの定期実行用のTopicのサブスクリプションで、Cloud Run Jobを実行するためのAPI(Httpでアクセスできるエンドポイント)を実行
 3. 2.のAPIを受けてCloud Run Jobのジョブが輝度する
-
-    ジョブの実行アカウントは、Pub/Subのサブスクリプションで指定したサービスアカウント？
 
 ## 準備
 
@@ -24,4 +24,10 @@
    gcloud projects add-iam-policy-binding ${PROJECT_NAME} \
    --member="serviceAccount:${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}" \
    --role=roles/run.invoker
+   ```
+
+   ```sh
+   gcloud projects add-iam-policy-binding ${PROJECT_NAME} \
+   --member="serviceAccount:${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}" \
+   --role=roles/run.jobs.run
    ```
