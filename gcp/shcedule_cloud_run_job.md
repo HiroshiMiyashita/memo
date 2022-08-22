@@ -4,6 +4,8 @@
 
 GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に処理を実行させるための方法について記述。  
 
+> 手順はMarkdownとして記述。
+
 ## 参考
 
 - [Cloud Run Jobsを使用してジョブをスケジュール実行する](https://tech.rhythm-corp.com/schedule-jobs-to-run-using-cloud-run-jobs/)
