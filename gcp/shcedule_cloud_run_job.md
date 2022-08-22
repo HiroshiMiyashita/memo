@@ -71,6 +71,10 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
         gcloud builds submit --tag gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}:latest
         ```
 
+        > 参考
+        > 
+        > [Gcloud コマンドラインリファレンス（gcloud builds submit）](https://cloud.google.com/sdk/gcloud/reference/builds/submit)
+
     3. Cloud Run Jobのジョブを作成する。
 
        ```sh
@@ -79,6 +83,10 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
        --region ${REGION_NAME}
        ```
 
+       > 参考
+       > 
+       > [Gcloud コマンドラインリファレンス（gcloud beta run jobs create）](https://cloud.google.com/sdk/gcloud/reference/beta/run/jobs/create) 
+
 2. Cloud Run JobのジョブをRest APIで起動するために使用するサービスアカウントに `roles/run.invoker` 権限を追加
 
     ```sh
@@ -86,6 +94,10 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
    --member="serviceAccount:${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}" \
    --role=roles/run.invoker
    ```
+
+   > 参考
+   > 
+   > [Gcloud コマンドラインリファレンス（gcloud projects add-iam-policy-binding）](https://cloud.google.com/sdk/gcloud/reference/projects/add-iam-policy-binding) 
 
 3. Cloud Shedulerを以下のように設定
 
@@ -102,7 +114,7 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
 
     ```sh
     gcloud scheduler jobs create http ${JOB_NAME}-scheduler \
-    --scheduler="0 */3 * * *" \
+    --schedule="0 */3 * * *" \
     --time-zone="Asia/Tokyo" \
     --uri="https://${REGION_NAME}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_NUMBER}/jobs/${JOB_NAME}:run" \
     --http-method=POST \
@@ -112,4 +124,5 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
 
     > 参考
     > 
-    > [Gcloud コマンドラインリファレンス（gcloud scheduler jobs create http）](https://cloud.google.com/sdk/gcloud/reference/scheduler/jobs/create/http)
+    > [Gcloud コマンドラインリファレンス（gcloud scheduler jobs create http）](https://cloud.google.com/sdk/gcloud/reference/scheduler/jobs/create/http)  
+    > [cron ジョブ スケジュールの構成](https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules)
