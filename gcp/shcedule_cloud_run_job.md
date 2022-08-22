@@ -1,5 +1,9 @@
 # Cloud ShedulerとCloud Run Jobを連携させて定期的にジョブを実行させる方法
 
+## 概要
+
+GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に処理を実行させるための方法について記述。  
+
 ## 参考
 
 - [Cloud Run Jobsを使用してジョブをスケジュール実行する](https://tech.rhythm-corp.com/schedule-jobs-to-run-using-cloud-run-jobs/)
@@ -45,9 +49,9 @@
 |JOB_NAME|ジョブ名||
 |DOCKER_IMAGE_NAME|Dockerイメージ名||
 
-1. `${REGION_NAME}`に`${JOB_NAME}`という名前でCloud Run Jobのジョブを作成する。
+1. `${REGION_NAME}`に`${JOB_NAME}`という名前でCloud Run Jobのジョブを作成
 
-    1. イメージを柵瀬資するためのDockerfileを作成する。
+    1. イメージを柵瀬資するためのDockerfileを作成
 
        ```
        FROM google/cloud-sdk:latest
@@ -59,7 +63,7 @@
        CMD $APP_HOME/script.sh
        ```
 
-    2. ジョブ実行用のコンテナイメージを作成して、それをコンテナイメージを格納するコンテナレジストリに登録する。
+    2. ジョブ実行用のコンテナイメージを作成して、それをコンテナイメージを格納するコンテナレジストリに登録
 
         ```sh
         gcloud builds submit --tag gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}:latest
@@ -73,7 +77,7 @@
        --region ${REGION_NAME}
        ```
 
-2. Cloud Run JobのジョブをRest APIで起動するために使用するサービスアカウントに `roles/run.invoker` 権限を追加する。
+2. Cloud Run JobのジョブをRest APIで起動するために使用するサービスアカウントに `roles/run.invoker` 権限を追加
 
     ```sh
    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
@@ -81,13 +85,29 @@
    --role=roles/run.invoker
    ```
 
-3. Cloud Shedulerの設定を以下のようにする。
+3. Cloud Shedulerを以下のように設定
 
     |設定|値|補足|
     |:---|:---|:---|
+    |スケジュール|"0 */3 * * *"|3時間ごとに実施する場合|
+    |タイムゾーン|Asia/Tokyo|日本時刻を使用する場合|
     |ターゲットタイプ|HTTP||
     |URL|https://${REGION_NAME}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_NUMBER}/jobs/${JOB_NAME}:run||
     |HTTPメソッド|POST||
     |Authヘッダー|OAuth トークンを追加||
     |サービスアカウント|${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}||
     |範囲|https://www.googleapis.com/auth/cloud-platform|Cloud Schedulerのデフォルトのスコープらしいが、意味はよく分からない。とりあえず動いたのでこれでよいのだと思う。|
+
+    ```sh
+    gcloud scheduler jobs create http ${JOB_NAME}-scheduler \
+    --scheduler="0 */3 * * *" \
+    --time-zone="Asia/Tokyo" \
+    --uri="https://${REGION_NAME}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_NUMBER}/jobs/${JOB_NAME}:run" \
+    --http-method=POST \
+    --oauth-service-account-email="${SERVICE_ACCOUNT_FOR_CLOUD_RUN_JOB_INVOKE}" \
+    --oauth-token-scope="https://www.googleapis.com/auth/cloud-platform"
+    ```
+
+    > 参考
+    > 
+    > [Gcloud コマンドラインリファレンス（gcloud scheduler jobs create http）](https://cloud.google.com/sdk/gcloud/reference/scheduler/jobs/create/http)
