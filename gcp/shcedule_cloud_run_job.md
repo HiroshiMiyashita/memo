@@ -75,6 +75,10 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
         > 
         > [Gcloud コマンドラインリファレンス（gcloud builds submit）](https://cloud.google.com/sdk/gcloud/reference/builds/submit)
 
+        > 注意
+        > 
+        > `${DOCKER_IMAGE_NAME}`に大文字が含まれているとビルドエラーとなる。
+
     3. Cloud Run Jobのジョブを作成する。
 
        ```sh
