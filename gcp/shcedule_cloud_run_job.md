@@ -53,7 +53,7 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
 
 1. `${REGION_NAME}`に`${JOB_NAME}`という名前でCloud Run Jobのジョブを作成
 
-    1. イメージを柵瀬資するためのDockerfileを作成
+    1. イメージを作成するためのDockerfileを作成
 
        ```
        FROM google/cloud-sdk:latest
@@ -79,7 +79,7 @@ GCP(Google Cloud)上でCloud ShedulerとCloud Run Jobを利用して定期的に
         > 
         > `${DOCKER_IMAGE_NAME}`に大文字が含まれているとビルドエラーとなる。
 
-    3. Cloud Run Jobのジョブを作成する。
+    3. Cloud Run Jobのジョブを作成
 
        ```sh
        gcloud beta run jobs create ${JOB_NAME} \
